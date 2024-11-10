@@ -1,56 +1,124 @@
 import React from 'react';
 import { Icon } from '@precooked/react-icon';
-
-interface IconPath {
-    d: string; // El atributo 'd' de la ruta del SVG
-    color?: string; // El color del trazo o relleno
-}
+import { colors } from '@precooked/utils';
 
 interface CheckboxFieldProps {
-    checked: boolean; // Estado del checkbox
-    onChange: (checked: boolean) => void; // Función que se ejecuta al cambiar el estado
-    styles?: React.CSSProperties; // Estilos aplicados al contenedor
+    label: string;
+    description?: string;
+    checked: boolean;
+    onChange: (checked: boolean) => void;
+    containerStyle?: React.CSSProperties;
+    labelStyle?: React.CSSProperties;
+    descriptionStyle?: React.CSSProperties;
+    headerStyle?: React.CSSProperties;
+    bodyStyle?: React.CSSProperties;
+
     className?: string;
     id?: string;
-    iconSize?: number; // Tamaño del icono
-    iconColor?: string; // Color del icono
-    checkedIconPaths?: IconPath[]; // Custom paths para el icono seleccionado
-    uncheckedIconPaths?: IconPath[]; // Custom paths para el icono no seleccionado
+    iconSize?: number;
+    iconColor?: string;
+    checkedIconPaths?: { d: string; color?: string }[];
+    uncheckedIconPaths?: { d: string; color?: string }[];
 }
 
 const CheckboxField: React.FC<CheckboxFieldProps> = ({
+    label,
+    description,
     checked,
     onChange,
-    styles,
+    containerStyle,
+    labelStyle,
+    descriptionStyle,
+    headerStyle,
+    bodyStyle,
     className,
     id,
-    iconSize = 24, // Valor por defecto del tamaño del ícono
-    iconColor = 'black', // Valor por defecto del color del ícono
-    checkedIconPaths, // Paths customizados para el ícono seleccionado
-    uncheckedIconPaths, // Paths customizados para el ícono no seleccionado
+    iconSize = 34,
+    iconColor = 'primary',
+    checkedIconPaths,
+    uncheckedIconPaths,
 }) => {
-    const handleCheckboxChange = () => {
-        onChange(!checked);
-    };
-
     return (
         <div
             id={id}
-            className={`checkbox-field-container ${className}`}
-            style={styles}
-            onClick={handleCheckboxChange}
-            role="button"
-            tabIndex={0} // Hace que el div sea navegable con el teclado
-            onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') handleCheckboxChange();
-            }} // Maneja la interacción por teclado
+            className={`precooked-checkbox-field-container ${className}`}
+            style={{
+                backgroundColor: colors.light,
+                borderRadius: "10px",
+                padding: 10,
+                //paddingTop: 0,
+                position: "relative",
+                ...containerStyle
+            }}
+
         >
-            <Icon
-                name={checked ? 'checkboxChecked' : 'checkboxUnchecked'}
-                color={iconColor}
-                size={iconSize}
-                paths={checked ? checkedIconPaths : uncheckedIconPaths} // Usa los paths customizados si existen
-            />
+            <div className={'precooked-field-header'}
+                style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "center",
+                    width: "100%",
+                    padding: "3px",
+                    position: "relative",
+                    boxSizing: "border-box",
+                    ...headerStyle
+                }}
+            >
+
+            </div>
+            <div
+                className={'precooked-field-body'}
+                style={{
+                    padding: "5px 10px 10px 10px",
+                    display: "flex",
+                    justifyContent: "center",
+                    flexWrap: "nowrap",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    ...bodyStyle
+                }}
+                onClick={() => onChange(!checked)}
+                role='button'
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') onChange(!checked);
+                }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "flex-end",
+                        flexDirection: "column",
+                        paddingRight: 10
+                    }}
+                >
+                    <label style={{
+                        cursor: 'pointer',
+                        color: colors.text,
+                        fontWeight: 'bold',
+                        ...labelStyle
+                    }}>{label}</label>
+                    {description && <p style={{
+                        cursor: 'pointer',
+                        fontWeight: 300,
+                        fontStyle: "italic",
+                        display: "block",
+                        padding: "0px 3px",
+                        margin: 0,
+                        color: colors.textTint,
+                        fontSize: ".9em",
+                        ...descriptionStyle
+                    }}>{description}</p>}
+                </div>
+
+                <Icon
+                    name={checked ? 'checkboxChecked' : 'checkboxUnchecked'}
+                    color={iconColor}
+                    size={iconSize}
+                    paths={checked ? checkedIconPaths : uncheckedIconPaths}
+                />
+            </div>
         </div>
     );
 };

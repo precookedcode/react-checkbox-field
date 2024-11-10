@@ -1,7 +1,7 @@
 {
   "name": "@precooked/react-checkbox-field",
   "version": "1.0.0",
-  "description": "Componente reutilizable para proyectos React",
+  "description": "Reusable component for React projects",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
